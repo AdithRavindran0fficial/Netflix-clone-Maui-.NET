@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using CommunityToolkit.Maui;
+using Netflix_clone.Services;
 
 namespace Netflix_clone
 {
@@ -9,16 +11,19 @@ namespace Netflix_clone
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("poppins-Regular.ttf", "PopinsRegular");
+                    fonts.AddFont("poppins-Semibold.ttf", "PopinsSemibold");
                 });
 
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
+            builder.Services.AddHttpClient(TmdbService.TmdbClientName,
+                HttpClient => HttpClient.BaseAddress = new Uri(" http://api.themoviedb.org/"));
+            builder.Services.AddSingleton<ITmdbService,TmdbService>();
             return builder.Build();
         }
     }

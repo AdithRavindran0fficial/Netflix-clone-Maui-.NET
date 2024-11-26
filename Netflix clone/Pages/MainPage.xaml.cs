@@ -1,14 +1,22 @@
-﻿namespace Netflix_clone
+﻿using Netflix_clone.Services;
+
+namespace Netflix_clone.Pages
 {
     public partial class MainPage : ContentPage
     {
         int count = 0;
+        private readonly ITmdbService _tmdbService;
 
-        public MainPage()
+        public MainPage(ITmdbService tmdbServices)
         {
             InitializeComponent();
+            _tmdbService = tmdbServices;
         }
-
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
+            var trendingData = await _tmdbService.GetTrendingAsync();
+        }
         private void OnCounterClicked(object sender, EventArgs e)
         {
             count++;
