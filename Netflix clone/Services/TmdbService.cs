@@ -20,15 +20,31 @@ namespace Netflix_clone.Services
             _httpClientFactory = httpClientFactory;
         }
         private HttpClient HttpClient => _httpClientFactory.CreateClient(TmdbClientName);
-        public async Task<IEnumerable<Media>> GetTrendingAsync()
+        public async Task<IEnumerable<Media>> GetTrendingAsync() =>
+            await GetMediaAsync(TmdbUrls.Trending);
+       
+        
+        public async Task<IEnumerable<Media>> GetTopRatedAsync() =>
+            await GetMediaAsync(TmdbUrls.TopRated);
+
+        public async Task<IEnumerable<Media>> GetNetflixOriginals() =>
+            await GetMediaAsync(TmdbUrls.NetflixOriginals);
+        public async Task<IEnumerable<Media>> GetActionasync() =>
+            await GetMediaAsync(TmdbUrls.Action);
+
+
+        private async Task<IEnumerable<Media>> GetMediaAsync(string url)
         {
-            var trendingMovies = await HttpClient.GetFromJsonAsync<Movie>($"{TmdbUrls.Trending}&api_key={api_key}");
-            if (trendingMovies == null)
+            var Movies_Collection = await HttpClient.GetFromJsonAsync<Movie>($"{url}&api_key={api_key}");
+            if (Movies_Collection == null)
             {
                 return null;
             }
-            return trendingMovies.results.Select(r=>r.ToMediaObject());
+            return Movies_Collection.results.Select(r => r.ToMediaObject());
+
         }
+
+  
     }
     public static class TmdbUrls
     {

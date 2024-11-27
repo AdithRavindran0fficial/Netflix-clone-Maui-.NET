@@ -1,33 +1,26 @@
 ﻿using Netflix_clone.Services;
+using Netflix_clone.ViewModels;
 
 namespace Netflix_clone.Pages
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-        private readonly ITmdbService _tmdbService;
+        
+        private readonly IHomeViewModel _homeViewModel;
 
-        public MainPage(ITmdbService tmdbServices)
+        public MainPage(IHomeViewModel viewmodel)
         {
             InitializeComponent();
-            _tmdbService = tmdbServices;
+            _homeViewModel = viewmodel;
+            BindingContext = viewmodel;
+            
         }
         protected async override void OnAppearing()
         {
             base.OnAppearing();
-            var trendingData = await _tmdbService.GetTrendingAsync();
+            await _homeViewModel.InitializingMoviesAsync();
         }
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }
+        
     }
 
 }
