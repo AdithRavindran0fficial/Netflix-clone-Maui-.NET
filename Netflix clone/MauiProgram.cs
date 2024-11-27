@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui;
 using Netflix_clone.Services;
 using Netflix_clone.ViewModels;
+using Netflix_clone.Pages;
 
 namespace Netflix_clone
 {
@@ -26,6 +27,7 @@ namespace Netflix_clone
                 HttpClient => HttpClient.BaseAddress = new Uri(" http://api.themoviedb.org/"));
             builder.Services.AddSingleton<ITmdbService,TmdbService>();
             builder.Services.AddSingleton<IHomeViewModel,HomeViewModel>();
+            builder.Services.AddSingleton<MainPage>();
             return builder.Build();
         }
     }

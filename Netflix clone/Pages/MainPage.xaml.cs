@@ -12,7 +12,7 @@ namespace Netflix_clone.Pages
         {
             InitializeComponent();
             _homeViewModel = viewmodel;
-            BindingContext = viewmodel;
+            BindingContext = _homeViewModel;
             
         }
         protected async override void OnAppearing()

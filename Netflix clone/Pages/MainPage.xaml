@@ -1,14 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Netflix_clone.Pages.MainPage">
+             x:Class="Netflix_clone.Pages.MainPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Black"
+             xmlns:Vm="clr-namespace:Netflix_clone.ViewModels"
+             x:DataType="Vm:HomeViewModel">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            
-        </VerticalStackLayout>
-    </ScrollView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label" x:Key="MenuLabel">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontAttributes"Value="Bold"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid Margin="0"
+          Padding="0">
+        <ScrollView BackgroundColor="Black">
+            <VerticalStackLayout>
+                <Grid HeightRequest="500">
+                    <Image Aspect="Center" HeightRequest="350"
+                           VerticalOptions="Center"
+                           Opacity="0.8"
+                           >
+                        <Image.Source>
+                            <UriImageSource Uri="{Binding TrendingMovie.Thumbnail}"/>
+                        </Image.Source>
+                    </Image>
+                    <Grid VerticalOptions="Start"
+                          HeightRequest="35"
+                          Margin="0,35,0,0">
+                        <FlexLayout JustifyContent="SpaceAround"
+                                    VerticalOptions="Center">
+                            <Label Text="TV Shows"
+                                   Style="{StaticResource MenuLabel}"/>
+                            <Label Text="Movies"
+                                    Style="{StaticResource MenuLabel}"/>
+                            <Label Text="Category"
+                                    Style="{StaticResource MenuLabel}"/>
+                        </FlexLayout>
+                    </Grid>
+                </Grid>
+                
+            </VerticalStackLayout>
+        </ScrollView>
+        
+    </Grid>
 
 </ContentPage>
