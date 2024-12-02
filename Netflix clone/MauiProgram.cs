@@ -24,10 +24,16 @@ namespace Netflix_clone
     		builder.Logging.AddDebug();
 #endif
             builder.Services.AddHttpClient(TmdbService.TmdbClientName,
-                HttpClient => HttpClient.BaseAddress = new Uri(" http://api.themoviedb.org/"));
+                HttpClient => {
+                    HttpClient.BaseAddress = new Uri("http://api.themoviedb.org");
+                    
+                }); 
+            
             builder.Services.AddSingleton<ITmdbService,TmdbService>();
             builder.Services.AddSingleton<IHomeViewModel,HomeViewModel>();
             builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<CategoriesViewModel>();
+            builder.Services.AddSingleton<CategoriesPage>();
             return builder.Build();
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Netflix_clone.Models;
 
 
@@ -11,15 +12,24 @@ namespace Netflix_clone.Services
 {
     public class TmdbService:ITmdbService
     {
+        private ILogger<TmdbService> _logger;
         private const  string api_key = "5f99b4adfc7ffd890447acf4a795afde";
         public const string TmdbClientName = "TmdbClient";
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public TmdbService(IHttpClientFactory httpClientFactory)
+        public TmdbService(IHttpClientFactory httpClientFactory,ILogger<TmdbService> logger)
         {
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
         private HttpClient HttpClient => _httpClientFactory.CreateClient(TmdbClientName);
+
+        public async Task<IEnumerable<Genre>> GetGenresAsync()
+        {
+            var genresWrapper = await HttpClient.GetFromJsonAsync<GenreWrapper>($"{TmdbUrls.MovieGenres}&api_key={api_key}");
+               
+            return genresWrapper.Genres;
+        }
         public async Task<IEnumerable<Media>> GetTrendingAsync() =>
             await GetMediaAsync(TmdbUrls.Trending);
        
@@ -35,12 +45,24 @@ namespace Netflix_clone.Services
 
         private async Task<IEnumerable<Media>> GetMediaAsync(string url)
         {
-            var Movies_Collection = await HttpClient.GetFromJsonAsync<Movie>($"{url}&api_key={api_key}");
-            if (Movies_Collection == null)
+            try
             {
+                var Movies_Collection = await HttpClient.GetFromJsonAsync<Movie>($"{url}&api_key={api_key}");
+                _logger.LogInformation($"{Movies_Collection.results.Length}");
+                if (Movies_Collection == null)
+                {
+                    return null;
+                }
+                return Movies_Collection.results.Select(r => r.ToMediaObject());
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"this is from service class ;{ex.InnerException}");
                 return null;
             }
-            return Movies_Collection.results.Select(r => r.ToMediaObject());
+
 
         }
 
@@ -53,6 +75,7 @@ namespace Netflix_clone.Services
         public const string TopRated = "3/movie/top_rated?language=en-US";
         public const string Action = "3/discover/movie?language=en-US&with_genres=28";
         public const string MovieGenres = "3/genre/movie/list?language=en-US";
+
 
 
         public static string GetTrailers(int movieId, string type = "movie") => $"3/{type ?? "movie"}/{movieId}/videos?language=en-US";
@@ -180,8 +203,9 @@ namespace Netflix_clone.Services
         public string iso_639_1 { get; set; }
         public string name { get; set; }
     }
-    //public class GenreWrapper
-    //{
-    //    public IEnumerable<Genre> Genres { get; set; }
-    //}
+    public class GenreWrapper
+    {
+        public IEnumerable<Genre> Genres { get; set; }
+    }
+    public record struct Genre(int Id, string Name);
 }

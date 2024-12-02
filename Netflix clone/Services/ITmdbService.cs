@@ -15,5 +15,7 @@ namespace Netflix_clone.Services
         
         Task<IEnumerable<Media>> GetNetflixOriginals();
         Task<IEnumerable<Media>> GetActionasync();
+
+        Task<IEnumerable<Genre>> GetGenresAsync();
     }
 }

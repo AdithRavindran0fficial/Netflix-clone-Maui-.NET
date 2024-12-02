@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Netflix_clone.Models;
 using Netflix_clone.Services;
 
@@ -20,6 +21,11 @@ namespace Netflix_clone.ViewModels
         }
         [ObservableProperty]
         public Media trendingMovie;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ShowMovieInfoBox))]
+        private Media? selectedMedia;
+
+        public bool ShowMovieInfoBox => selectedMedia is not null;
         public ObservableCollection<Media> Trending { get; set; } = new();
         public ObservableCollection<Media> TopRated { get; set; } = new();
         public ObservableCollection<Media> NetflixOriginals { get; set; } = new();
@@ -48,6 +54,8 @@ namespace Netflix_clone.ViewModels
             Inializer(TopRatedCollection, TopRated);
             Inializer(ActionMovieCollection, ActionMovie);
             Inializer(NetflixOriginMovieCollection, NetflixOriginals);
+
+            //SelectedMedia = TrendingMovie;
             
         }
         private void Inializer(IEnumerable<Media> media ,ObservableCollection<Media> collection)
@@ -57,6 +65,20 @@ namespace Netflix_clone.ViewModels
             {
                 collection.Add(movies);
             }
+        }
+        [RelayCommand]
+        public void SelectMedia(Media? media = null)
+        {
+            if(media is not null)
+            {
+                if(media.Id== selectedMedia?.Id)
+                {
+                    media = null;
+                }
+
+            }
+            SelectedMedia = media;
+
         }
         
     }

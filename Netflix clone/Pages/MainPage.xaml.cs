@@ -20,7 +20,22 @@ namespace Netflix_clone.Pages
             base.OnAppearing();
             await _homeViewModel.InitializingMoviesAsync();
         }
-        
+
+        private void MovieRow_MediaSelected(object sender, Controls.MediaSelectEventArgs e)
+        {
+            _homeViewModel.SelectMedia(e.Media);
+        }
+
+        private void MovieInfoBox_InfoBoxClosed(object sender, EventArgs e)
+        {
+            _homeViewModel.SelectMedia(null);
+        }
+
+        private async void Category_Tapped(object sender, TappedEventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(CategoriesPage));
+
+        }
     }
 
 }
