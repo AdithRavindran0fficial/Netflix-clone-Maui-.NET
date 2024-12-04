@@ -41,6 +41,26 @@ namespace Netflix_clone.Services
             await GetMediaAsync(TmdbUrls.NetflixOriginals);
         public async Task<IEnumerable<Media>> GetActionasync() =>
             await GetMediaAsync(TmdbUrls.Action);
+        
+        public async Task<IEnumerable<Video>?> GetTrailers(int id,string type = "movie")
+        {
+            var videosWrapper = await HttpClient.GetFromJsonAsync<VideosWrapper>(
+                $"{TmdbUrls.GetTrailers(id, type)}&api_key={api_key}");
+            if(videosWrapper?.results?.Length > 0)
+            {
+                var trailerTeasers = videosWrapper.results.Where(VideosWrapper.FilterTrailerTeasers);
+                return trailerTeasers;
+            }
+            return null;
+        }
+
+        public async Task<MovieDetail> GetMediaDetails(int id,string type = "movie")
+        {
+            var details = await HttpClient.GetFromJsonAsync<MovieDetail>(
+                $"{TmdbUrls.GetMovieDetails(id, type)}&api_key={api_key}"
+                );
+            return details;
+        }
 
 
         private async Task<IEnumerable<Media>> GetMediaAsync(string url)

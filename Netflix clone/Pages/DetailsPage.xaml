@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Netflix_clone.Pages.DetailsPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="DetailsPage"
+             xmlns:vm="clr-namespace:Netflix_clone.ViewModels"
+             x:DataType="vm:DetailsViewModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label" x:Key="tabtext" >
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="TextTransform" Value="Uppercase"/>
+                <Setter Property="Margin" Value="0,5,0,0"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView BackgroundColor="Black">
+        <Grid>
+            <ActivityIndicator Color="White"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               HeightRequest="50"
+                               WidthRequest="50"
+                               IsRunning="{Binding IsBusy}"/>
+            <VerticalStackLayout IsVisible="False">
+                <VerticalStackLayout.Triggers>
+                    <DataTrigger TargetType="VerticalStackLayout"
+                                 Binding="{Binding IsBusy}"
+                                 Value="False">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </VerticalStackLayout.Triggers>
+                <WebView Source="{Binding MainTrailerUrl}"
+                         HeightRequest="250"
+                         WidthRequest="300"/>
+                <VerticalStackLayout Padding="5" Spacing="10">
+                    <Label Text="{Binding Media.DisplayTitle}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           />
+                    <HorizontalStackLayout >
+                        <Label Text="{Binding Media.Release_date}" TextColor="White" Padding="1,0,15,0"/>
+                        <Label Text="{Binding Runtime}" TextColor="White"/>
+                    </HorizontalStackLayout>
+                    <Button Text="Play" BackgroundColor="White" TextColor="Black" CornerRadius="4" FontAttributes="Bold"/>
+                    <Button Text="Download" BackgroundColor="Gray" TextColor="White" CornerRadius="4" FontAttributes="Bold"/>
+                    <Label Text="{Binding Media.Overview}"
+                           FontSize="13" TextColor="White"/>
+                    <Grid ColumnDefinitions="*,*,*">
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                            <Image Source="plus"
+                                   Aspect="AspectFit"
+                                   HeightRequest="25"
+                                   WidthRequest="25"
+                                   >
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="White"/>
+                                </Image.Behaviors>
+                            </Image>
+                            <Label Text="My List" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" Grid.Column="1">
+                            <Image Source="Rate"
+                                    Aspect="AspectFit"
+                                    HeightRequest="25"
+                                    WidthRequest="25"
+                                                    >
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="White"/>
+                                </Image.Behaviors>
+                            </Image>
+                            <Label Text="Rate" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" Grid.Column="2">
+                            <Image Source="share"
+                                        Aspect="AspectFit"
+                                        HeightRequest="25"
+                                        WidthRequest="25"
+                                        >       
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="White"/>
+                                </Image.Behaviors>
+                            </Image>
+                            <Label Text="Share" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                </VerticalStackLayout >
+                <VerticalStackLayout Margin="5" >
+                    <BoxView HeightRequest="2"/>
+
+                    <Grid RowDefinitions="auto,Auto"
+                          ColumnDefinitions="auto,auto"
+                          ColumnSpacing="15">
+                       
+                        <VerticalStackLayout Grid.Row="0"
+                                             Grid.Column="0"
+                                             >
+                            <BoxView HeightRequest="4"
+                                     Color="Red"
+                                     x:Name="trailersTabIndicator"/>
+                            <Label Text="Trailers &amp; More"
+                                   Style="{StaticResource tabtext}"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="0"
+                                        Grid.Column="1">
+                            <BoxView HeightRequest="4"
+                                    Color="Black"
+                                     x:Name="similartrailersTabIndiactor"
+                                     />
+                            <Label Text="More Like This"
+                                    Style="{StaticResource tabtext}"/>
+                        </VerticalStackLayout>
+
+                    </Grid>
+                    
+                </VerticalStackLayout>
+
+                <Border BackgroundColor="Black" 
+                        StrokeThickness="0" 
+                        x:Name="trialersTabContent"
+                        >
+                    <Label Text="Trailers Collection view"/>
+                </Border>
+
+                <Border BackgroundColor="Black" 
+                        StrokeThickness="0" 
+                        IsVisible="False">
+                    
+                    <Label Text="More like this grid"/>
+                </Border>
+                
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>

@@ -172,5 +172,9 @@
                        Text=">"/>
             </Grid>
         </VerticalStackLayout>
+
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+        </Border.GestureRecognizers>
     </Border>
 </ContentView>
