@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Netflix_clone.ViewModels
         }
         [ObservableProperty]
         private Media _media;
-
+        public ObservableCollection<Video> Videos { get; set; }
         [ObservableProperty]
         private string mainTrailerUrl;
 
@@ -35,8 +36,10 @@ namespace Netflix_clone.ViewModels
             isBusy = true;
             try
             {
-                var trailersTreasers = await _mdbService.GetTrailers(Media.Id, Media.Media_Type);
-                var details = await _mdbService.GetMediaDetails(Media.Id, Media.Media_Type);
+                var trailersTreasersTask =_mdbService.GetTrailers(Media.Id, Media.Media_Type);
+                var detailsTask=  _mdbService.GetMediaDetails(Media.Id, Media.Media_Type);
+                var trailersTreasers = await trailersTreasersTask;
+                var details = await detailsTask;
                 if (trailersTreasers?.Any() == true)
                 {
                     var trailer = trailersTreasers.FirstOrDefault(tr => tr.type == "Trailer");
@@ -45,6 +48,10 @@ namespace Netflix_clone.ViewModels
                         trailer = trailersTreasers.FirstOrDefault();
                     }
                     MainTrailerUrl = GenerateYoutubeUrl(trailer.key);
+                    foreach(var video in trailersTreasers)
+                    {
+                        Videos.Add(video);
+                    }
 
                     
                    

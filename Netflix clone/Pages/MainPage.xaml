@@ -7,7 +7,6 @@
              BackgroundColor="Black"
              xmlns:Vm="clr-namespace:Netflix_clone.ViewModels"
              x:DataType="Vm:HomeViewModel">
-
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label" x:Key="MenuLabel">

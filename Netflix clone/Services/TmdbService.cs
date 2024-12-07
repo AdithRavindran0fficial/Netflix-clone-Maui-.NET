@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Netflix_clone.Models;
@@ -46,10 +47,14 @@ namespace Netflix_clone.Services
         {
             var videosWrapper = await HttpClient.GetFromJsonAsync<VideosWrapper>(
                 $"{TmdbUrls.GetTrailers(id, type)}&api_key={api_key}");
+            
             if(videosWrapper?.results?.Length > 0)
             {
                 var trailerTeasers = videosWrapper.results.Where(VideosWrapper.FilterTrailerTeasers);
+                var trailerJson = JsonSerializer.Serialize(trailerTeasers);
+                _logger.LogInformation($"Trailer Teasers: {trailerJson}");
                 return trailerTeasers;
+                
             }
             return null;
         }

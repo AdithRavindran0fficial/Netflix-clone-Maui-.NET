@@ -26,6 +26,7 @@ namespace Netflix_clone
             builder.Services.AddHttpClient(TmdbService.TmdbClientName,
                 HttpClient => {
                     HttpClient.BaseAddress = new Uri("http://api.themoviedb.org");
+                   
                     
                 }); 
             

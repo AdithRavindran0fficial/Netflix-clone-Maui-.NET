@@ -5,6 +5,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="DetailsPage"
              xmlns:vm="clr-namespace:Netflix_clone.ViewModels"
+             xmlns:services="clr-namespace:Netflix_clone.Services"
              x:DataType="vm:DetailsViewModel">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -43,7 +44,7 @@
                            />
                     <HorizontalStackLayout >
                         <Label Text="{Binding Media.Release_date}" TextColor="White" Padding="1,0,15,0"/>
-                        <Label Text="{Binding Runtime}" TextColor="White"/>
+                        <Label Text="{Binding Runtime, StringFormat='{0 minutes}'}" TextColor="White"/>
                     </HorizontalStackLayout>
                     <Button Text="Play" BackgroundColor="White" TextColor="Black" CornerRadius="4" FontAttributes="Bold"/>
                     <Button Text="Download" BackgroundColor="Gray" TextColor="White" CornerRadius="4" FontAttributes="Bold"/>
@@ -105,7 +106,12 @@
                                      Color="Red"
                                      x:Name="trailersTabIndicator"/>
                             <Label Text="Trailers &amp; More"
-                                   Style="{StaticResource tabtext}"/>
+                                   Style="{StaticResource tabtext}"
+                                   >
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TrailerTab_Tapped"/>
+                                </Label.GestureRecognizers>
+                            </Label>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Row="0"
@@ -115,7 +121,11 @@
                                      x:Name="similartrailersTabIndiactor"
                                      />
                             <Label Text="More Like This"
-                                    Style="{StaticResource tabtext}"/>
+                                    Style="{StaticResource tabtext}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="SimilarTab_Tapped"/>
+                                </Label.GestureRecognizers>
+                            </Label>
                         </VerticalStackLayout>
 
                     </Grid>
@@ -126,7 +136,24 @@
                         StrokeThickness="0" 
                         x:Name="trialersTabContent"
                         >
-                    <Label Text="Trailers Collection view"/>
+                    <CollectionView ItemsSource="{Binding Videos}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="services:Video">
+                                <Grid RowDefinitions="250,Auto" Padding="10">
+                                    <Border Grid.Row="0"
+                                            StrokeShape="RoundRectangle 5"
+                                            StrokeThickness="0">
+                                        <Image Aspect="AspectFill">
+                                            <Image.Source>
+                                                <UriImageSource Uri="{Binding Thumbnail}"/>
+                                            </Image.Source>
+                                        </Image>
+                                    </Border>
+                                    <Label Text="{Binding name}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </Border>
 
                 <Border BackgroundColor="Black" 
