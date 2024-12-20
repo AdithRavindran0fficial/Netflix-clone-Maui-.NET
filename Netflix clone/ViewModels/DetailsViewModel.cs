@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Netflix_clone.Models;
+using Netflix_clone.Pages;
 using Netflix_clone.Services;
 
 namespace Netflix_clone.ViewModels
@@ -14,6 +16,8 @@ namespace Netflix_clone.ViewModels
     public partial class DetailsViewModel :ObservableObject
     {
         private readonly ITmdbService _mdbService;
+        [ObservableProperty]
+        private int similarItemWidth = 125;
         public DetailsViewModel(ITmdbService tmdbService)
         {
             _mdbService = tmdbService;
@@ -21,7 +25,10 @@ namespace Netflix_clone.ViewModels
         }
         [ObservableProperty]
         private Media _media;
-        public ObservableCollection<Video> Videos { get; set; }
+        public ObservableCollection<Video> Videos { get; set; } = new();
+        public ObservableCollection<Media> SimilarMedias { get; set; } = new();
+
+
         [ObservableProperty]
         private string mainTrailerUrl;
 
@@ -33,6 +40,8 @@ namespace Netflix_clone.ViewModels
 
         public async Task InitializeAsync()
         {
+            var similarMediasTask = _mdbService.GetSimilarAsync(Media.Id, Media.Media_Type);
+
             isBusy = true;
             try
             {
@@ -52,9 +61,9 @@ namespace Netflix_clone.ViewModels
                     {
                         Videos.Add(video);
                     }
+                  
 
-                    
-                   
+
                 }
                 else
                 {
@@ -68,6 +77,23 @@ namespace Netflix_clone.ViewModels
 
             }
             finally { isBusy = false; }
+            var similarMedias = await similarMediasTask;
+            if(similarMedias?.Any() == true)
+            {
+                foreach(var media in similarMedias)
+                {
+                    SimilarMedias.Add(media);
+                }
+            }
+        }
+        [RelayCommand]
+        private async Task ChangeToThisMediaCommand(Media media)
+        {
+            var parameter = new Dictionary<string, object>
+            {
+                [nameof(DetailsViewModel.Media)] = Media
+            };
+            await Shell.Current.GoToAsync(nameof(DetailsPage), true, parameter);
         }
         private static string GenerateYoutubeUrl(string videoKey) =>
             $"https://www.youtube.com/embed/{videoKey}";

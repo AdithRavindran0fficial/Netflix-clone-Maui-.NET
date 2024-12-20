@@ -5,6 +5,8 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="DetailsPage"
              xmlns:vm="clr-namespace:Netflix_clone.ViewModels"
+             xmlns:models="clr-namespace:Netflix_clone.Models"
+
              xmlns:services="clr-namespace:Netflix_clone.Services"
              x:DataType="vm:DetailsViewModel">
     <ContentPage.Resources>
@@ -12,6 +14,7 @@
             <Style TargetType="Label" x:Key="tabtext" >
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="TextColor" Value="White"/>
                 <Setter Property="TextTransform" Value="Uppercase"/>
                 <Setter Property="Margin" Value="0,5,0,0"/>
             </Style>
@@ -92,7 +95,7 @@
                     </Grid>
 
                 </VerticalStackLayout >
-                <VerticalStackLayout Margin="5" >
+                <VerticalStackLayout Margin="1,6,0,0" >
                     <BoxView HeightRequest="2"/>
 
                     <Grid RowDefinitions="auto,Auto"
@@ -118,7 +121,7 @@
                                         Grid.Column="1">
                             <BoxView HeightRequest="4"
                                     Color="Black"
-                                     x:Name="similartrailersTabIndiactor"
+                                     x:Name="similarTabIndiactor"
                                      />
                             <Label Text="More Like This"
                                     Style="{StaticResource tabtext}">
@@ -132,9 +135,9 @@
                     
                 </VerticalStackLayout>
 
-                <Border BackgroundColor="Black" 
+                <Border  BackgroundColor="Black"
                         StrokeThickness="0" 
-                        x:Name="trialersTabContent"
+                        x:Name="trailersTabContent"
                         >
                     <CollectionView ItemsSource="{Binding Videos}">
                         <CollectionView.ItemTemplate>
@@ -142,12 +145,27 @@
                                 <Grid RowDefinitions="250,Auto" Padding="10">
                                     <Border Grid.Row="0"
                                             StrokeShape="RoundRectangle 5"
-                                            StrokeThickness="0">
+                                            StrokeThickness="0"
+                                            Opacity="0.8">
                                         <Image Aspect="AspectFill">
                                             <Image.Source>
                                                 <UriImageSource Uri="{Binding Thumbnail}"/>
                                             </Image.Source>
                                         </Image>
+                                    </Border>
+                                    <Border Grid.Row="0"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Center"
+                                            BackgroundColor="White"
+                                            HeightRequest="50"
+                                            WidthRequest="50"
+                                            StrokeShape="RoundRectangle 25"
+                                            >
+                                        <Image Source="play"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Center"
+                                               Aspect="AspectFit"></Image>
+                                        
                                     </Border>
                                     <Label Text="{Binding name}"/>
                                 </Grid>
@@ -158,9 +176,34 @@
 
                 <Border BackgroundColor="Black" 
                         StrokeThickness="0" 
-                        IsVisible="False">
-                    
-                    <Label Text="More like this grid"/>
+                        IsVisible="False"
+                        x:Name="similarTabContent">
+
+                    <FlexLayout BindableLayout.ItemsSource="{Binding SimilarMedias}"
+                                Wrap="Wrap"
+                                JustifyContent="SpaceBetween">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:Media">
+                                <Border StrokeShape="RoundRectangle"
+                                        BackgroundColor="Black"
+                                        StrokeThickness="0"
+                                        HeightRequest="120"
+                                        WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type vm:DetailsViewModel}}, Path=SimilarItemWidth}"
+                                        Margin="0,0,0,5"
+                                        >
+
+                                    <Image Source="{Binding ThumbnailSmall}"
+                                           Aspect="Fill"
+                                           >
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DetailsViewModel}}, Path= ChangeToThisMediaCommand}" CommandParameter="{Binding .}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Border> 
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                        
+                    </FlexLayout>
                 </Border>
                 
             </VerticalStackLayout>

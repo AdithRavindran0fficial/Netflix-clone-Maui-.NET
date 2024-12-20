@@ -56,6 +56,7 @@ namespace Netflix_clone.Services
                 return trailerTeasers;
                 
             }
+            _logger.LogInformation("this is from get trailer it is null::::::");
             return null;
         }
 
@@ -66,6 +67,9 @@ namespace Netflix_clone.Services
                 );
             return details;
         }
+        public async Task<IEnumerable<Media>> GetSimilarAsync(int id,string type = "movie") =>
+           await GetMediaAsync(
+               $"{TmdbUrls.GetSimilar(id, type)}&api_key={api_key}");
 
 
         private async Task<IEnumerable<Media>> GetMediaAsync(string url)

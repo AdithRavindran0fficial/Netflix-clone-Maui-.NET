@@ -14,27 +14,54 @@ public partial class DetailsPage : ContentPage
 	}
     protected async override void OnAppearing()
     {
-        base.OnAppearing();
-		await DetailsViewModel.InitializeAsync();
+        try
+        {
+            base.OnAppearing();
+            await DetailsViewModel.InitializeAsync();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+       
+    }
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        if (width > 0)
+        {
+            DetailsViewModel.SimilarItemWidth = Convert.ToInt32(width / 3)-3;
+        }
     }
 
     private void TrailerTab_Tapped(object sender, TappedEventArgs e)
     {
-       similartrailersTabIndiactor.IsVisible = false;
-        similartrailersTabIndiactor.Color = Colors.Black;   
-        
-        trailersTabIndicator.IsVisible = false;
-        trailersTabIndicator.Color = Colors.Red;
+        try
+        {
+            similarTabIndiactor.Color = Colors.Black;
+            similarTabContent.IsVisible = false;
 
+            trailersTabContent.IsVisible = true;
+            trailersTabIndicator.Color = Colors.Red;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in TrailerTab_Tapped: {ex.Message}");
+        }
     }
+
 
     private void SimilarTab_Tapped(object sender, TappedEventArgs e)
     {
-        similartrailersTabIndiactor.IsVisible = true;
-        similartrailersTabIndiactor.Color = Colors.Red;
-
-        trailersTabIndicator.IsVisible = false;
+        
+        
         trailersTabIndicator.Color = Colors.Black;
+        trailersTabContent.IsVisible = false;
+
+        similarTabIndiactor.Color = Colors.Red;
+        similarTabContent.IsVisible = true;
+
 
     }
 }
