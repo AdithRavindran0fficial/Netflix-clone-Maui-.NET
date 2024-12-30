@@ -37,7 +37,6 @@ namespace Netflix_clone.ViewModels
 
         [ObservableProperty]
         private int runtime;
-
         public async Task InitializeAsync()
         {
             var similarMediasTask = _mdbService.GetSimilarAsync(Media.Id, Media.Media_Type);
